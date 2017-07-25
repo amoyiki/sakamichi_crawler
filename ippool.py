@@ -1,12 +1,8 @@
-import os
-
 import requests
 from bs4 import BeautifulSoup
 import lxml
 from multiprocessing import Process, Queue
 import random
-import json
-import time
 
 
 class IPPool(object):
