@@ -6,6 +6,45 @@
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+import random
+from utils import get_for_file
+
+
+class ProxyMiddleware(object):
+
+    def process_request(self, request, spider):
+        proxy = self.get_random_proxy()
+        print("this is request ip:" + proxy)
+        request.meta['proxy'] = proxy
+
+    def process_response(self, request, response, spider):
+
+        if response.status != 200:
+            proxy = self.get_random_proxy()
+            print("this is response ip:" + proxy)
+            # 对当前reque加上代理
+            request.meta['proxy'] = proxy
+            return request
+
+        return response
+
+    def get_random_proxy(self):
+        '''随机从文件中读取proxy'''
+        proxies = get_for_file('ip_list.txt')
+        proxy = random.choice(proxies).strip()
+        return proxy
+
+
+class UAMiddleware(object):
+
+    def process_request(self, request, spider):
+        user_agent = random.choice(get_for_file('ua_list.txt')).strip()
+        print('current ua is %s' % user_agent)
+        try:
+            request.headers['User-Agent'] = user_agent
+            print(request.headers)
+        except Exception as e:
+            print(e)
 
 
 class SakamichiCrawlerSpiderMiddleware(object):
