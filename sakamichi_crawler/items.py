@@ -20,7 +20,7 @@ class MemberItem(scrapy.Item):
     constellation = Field()
     stature = Field()
     avatar = Field()
-
+    roomazi = Field()
 
 
 class SakamichiCrawlerItem(scrapy.Item):

@@ -67,9 +67,10 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
+ITEM_PIPELINES = {
 #    'sakamichi_crawler.pipelines.SakamichiCrawlerPipeline': 300,
-#}
+    'sakamichi_crawler.pipelines.ImageDownloadPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -91,6 +92,8 @@ DOWNLOADER_MIDDLEWARES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+COMMANDS_MODULE = 'sakamichi_crawler.commands'
+
 from scrapy.exporters import JsonLinesItemExporter
 class CustomJsonLinesItemExporter(JsonLinesItemExporter):
     def __init__(self, file, **kwargs):
@@ -100,3 +103,5 @@ class CustomJsonLinesItemExporter(JsonLinesItemExporter):
 FEED_EXPORTERS = {
     'json': 'sakamichi_crawler.settings.CustomJsonLinesItemExporter',
 }
+
+IMAGE_FILE = '../'

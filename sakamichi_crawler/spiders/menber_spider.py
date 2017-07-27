@@ -27,24 +27,23 @@ class MemberSpider(scrapy.Spider):
     def memeber_profile(self, response):
         sel = scrapy.Selector(response)
         item = MemberItem()
-        try:
-            name = sel.xpath("//div[@id='member']/h3/text()").extract()[0]
-            avatar = sel.xpath("//div[@id='member']/div[@class='pic']/img/@src").extract()[0]
-            profile = sel.xpath("//div[@id='member']/dl/dd/text()").extract()
-            birthday = profile[0]
-            blood_type = profile[1]
-            constellation = profile[2]
-            stature = profile[3]
+        name = sel.xpath("//div[@id='member']/h3/text()").extract()[0]
+        avatar = sel.xpath("//div[@id='member']/div[@class='pic']/img/@src").extract()[0]
+        profile = sel.xpath("//div[@id='member']/dl/dd/text()").extract()
+        birthday = profile[0]
+        blood_type = profile[1]
+        constellation = profile[2]
+        stature = profile[3]
+        link = sel.xpath("//link[@media='mixi-device-smartphone']/@href").extract()[0]
+        r = re.findall('\/([^/]+)\.php', link)[0]
+        roomazi = r
 
-            assert True
-            item['name'] = str(name)
-            item['birthday'] = str(birthday)
-            item['blood_type'] = str(blood_type)
-            item['constellation'] = str(constellation)
-            item['stature'] = str(stature)
-            item['avatar'] = str(avatar)
-
-        except:
-            pass
+        item['name'] = str(name)
+        item['birthday'] = str(birthday)
+        item['blood_type'] = str(blood_type)
+        item['constellation'] = str(constellation)
+        item['stature'] = str(stature)
+        item['avatar'] = str(avatar)
+        item['roomazi'] = str(roomazi)
 
         yield item
