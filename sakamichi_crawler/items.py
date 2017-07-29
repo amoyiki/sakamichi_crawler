@@ -21,7 +21,18 @@ class MemberItem(scrapy.Item):
     stature = Field()
     avatar = Field()
     roomazi = Field()
+    group = Field()
 
+
+class ArticleItem(scrapy.Item):
+    """
+        文章model
+    """
+    _id = Field()
+    title = Field()
+    createtime = Field()
+    content = Field()
+    group = Field()
 
 class SakamichiCrawlerItem(scrapy.Item):
     # define the fields for your item here like:
