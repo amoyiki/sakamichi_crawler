@@ -38,11 +38,13 @@ class ProxyMiddleware(object):
 class UAMiddleware(object):
 
     def process_request(self, request, spider):
-        user_agent = random.choice(get_for_file('ua_list.txt')).strip()
+        if spider.name == 'article_crawler':
+            user_agent = "Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/532.9 (KHTML, like Gecko) Chrome/5.0.310.0 Safari/532.9"
+        else:
+            user_agent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5"
         print('current ua is %s' % user_agent)
         try:
             request.headers['User-Agent'] = user_agent
-            print(request.headers)
         except Exception as e:
             print(e)
 

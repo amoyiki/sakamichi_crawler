@@ -30,9 +30,11 @@ class ArticleItem(scrapy.Item):
     """
     _id = Field()
     title = Field()
-    createtime = Field()
+    datetime = Field()
+    author = Field()
     content = Field()
     group = Field()
+
 
 class SakamichiCrawlerItem(scrapy.Item):
     # define the fields for your item here like:

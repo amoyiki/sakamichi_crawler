@@ -1,11 +1,11 @@
 import re
 import scrapy
-import time
 
 from sakamichi_crawler.items import MemberItem
 
 
 class MemberSpider(scrapy.Spider):
+
     name = "sakamichi_crawler"
     allowed_domains = ["nogizaka46.com", "keyakizaka46.com"]
 
