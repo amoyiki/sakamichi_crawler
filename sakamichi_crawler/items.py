@@ -13,6 +13,7 @@ class MemberItem(scrapy.Item):
     """
         成员model
     """
+    __table__ = 't_member'
     _id = Field()
     name = Field()
     birthday = Field()
@@ -23,11 +24,16 @@ class MemberItem(scrapy.Item):
     roomazi = Field()
     group = Field()
 
+    @staticmethod
+    def get_insert_sql(self):
+        return
+
 
 class ArticleItem(scrapy.Item):
     """
         文章model
     """
+    __table__ = 't_article'
     _id = Field()
     title = Field()
     datetime = Field()

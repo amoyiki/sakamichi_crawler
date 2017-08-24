@@ -69,7 +69,8 @@ DOWNLOADER_MIDDLEWARES = {
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 #    'sakamichi_crawler.pipelines.SakamichiCrawlerPipeline': 300,
-    'sakamichi_crawler.pipelines.ImageDownloadPipeline': 300,
+#     'sakamichi_crawler.pipelines.ImageDownloadPipeline': 300,
+   'sakamichi_crawler.pipelines.MongoDBPipeline': 310,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -105,3 +106,9 @@ FEED_EXPORTERS = {
 }
 
 IMAGE_FILE = '../'
+
+MONGODB_SERVER = 'localhost'
+MONGODB_PORT = 27017
+MONGODB_DB = 'sakamichi'
+MONGODB_PROFILE = "profile"
+MONGODB_BLOG = "blog"
