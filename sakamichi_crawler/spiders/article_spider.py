@@ -1,10 +1,12 @@
+import codecs
 import datetime
+import html
 import re
 
 import MySQLdb
 import scrapy
 import time
-
+import cgi
 from scrapy.extensions.closespider import CloseSpider
 
 from sakamichi_crawler.items import MemberItem, ArticleItem
@@ -85,22 +87,30 @@ class ArticleSpider(scrapy.Spider):
         sel = scrapy.Selector(response)
         item = ArticleItem()
         if 'nogizaka46' in response.url:
-            title = sel.xpath("//span[@class='entrytitle']/a/text()").extract()
+            title = sel.xpath("//span[@class='entrytitle']/a").extract()
             datetime = sel.xpath("//div[@class='entrybottom']/text()[1]").extract()
             author = sel.xpath("//span[@class='author']/text()").extract()
             content = sel.xpath("//div[@class='entrybody']").extract()
-            for index, element in enumerate(author):
+            for index, element in enumerate(datetime):
                 item['title'] = title[index]
+                t = item['title'].replace('\\', r"\\")
+                # 去除空格
+                item['title'] = ''.join(re.split(r'[\s]', t))
+                # 去除html标签
+                item['title'] = re.sub(r"<[^>]*>", '', item['title'])
+                # 转义
+                # item['title'] = html.escape(item['title'])
+                item['title'] = re.sub(r'"', r"\"", item['title'])
                 item['datetime'] = datetime[index].strip().replace(r'｜', '')
                 if element != '３期生':
-                    item['author'] = element
+                    item['author'] = author[index]
                 else:
                     for k, v in sankisei.items():
                         if re.search(sankisei[k], item['title']) is not None:
                             item['author'] = sankisei[k]
                             break
                         else:
-                            item['author'] = element
+                            item['author'] = author[index]
 
                 c = content[index]
                 c = re.sub(r"<[^img|a][^a][^>]*>", '<br>', c)
@@ -112,15 +122,29 @@ class ArticleSpider(scrapy.Spider):
                     if x and x != '\xa0' and x != '\n':
                         new_c.append(x.replace('\xa0', ''))
                 item['content'] = '<br>'.join(new_c)
+                item['content'] = ''.join(re.split(r'[\s]', item['content']))
+                # 转义
+                item['content'] = item['content'].replace('\\', r"\\")
+                # item['content'] = html.escape(item['content'])
+                item['content'] = re.sub(r'"', "'", item['content'])
                 item['group'] = 'nogizaka46'
                 yield item
         elif 'keyakizaka46' in response.url:
-            title = sel.xpath("//article/div[@class='innerHead']/div[@class='box-ttl']/h3/a/text()").extract()
+            title = sel.xpath("//article/div[@class='innerHead']/div[@class='box-ttl']/h3/a").extract()
             datetime = sel.xpath("//article/div[@class='box-bottom']/ul/li[1]/text()").extract()
             author = sel.xpath("//article/div[@class='innerHead']/div[@class='box-ttl']/p/text()").extract()
             content = sel.xpath("//article/div[@class='box-article']").extract()
-            for index, element in enumerate(title):
-                item['title'] = re.sub(r"\n", '', element).strip()
+
+            for index, element in enumerate(datetime):
+                item['title'] = re.sub(r"\n", '', title[index]).strip()
+                t = item['title'].replace('\\', r"\\")
+                # 去除空格
+                item['title'] = ''.join(re.split(r'[\s]', t))
+                # 去除html标签
+                item['title'] = re.sub(r"<[^>]*>", '', item['title'])
+                # 转义
+                # item['title'] = html.escape(item['title'])
+                item['title'] = re.sub(r'"', r"\"", item['title'])
                 item['datetime'] = re.sub(r"\n", '', datetime[index]).strip()
                 item['author'] = re.sub(r"\n", '', author[index]).strip()
                 c = content[index]
@@ -134,7 +158,11 @@ class ArticleSpider(scrapy.Spider):
                         new_c.append(x.replace('\xa0', ''))
 
                 item['content'] = '<br>'.join(new_c)
-
+                item['content'] = ''.join(re.split(r'[\s]', item['content']))
+                # 转义
+                # item['content'] = html.escape(item['content'])
+                item['content'] = item['content'].replace('\\', r"\\")
+                item['content'] = re.sub(r'"', "'", item['content'])
                 item['group'] = 'keyakizaka46'
 
                 yield item
